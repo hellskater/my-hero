@@ -6,6 +6,7 @@ import { Toaster } from 'sonner';
 import { TRPCReactProvider } from '@/trpc/react';
 import { siteConfig } from '@/config/site';
 import ProviderContext from '@/lib/providers/privy';
+import { ThemeProvider } from 'next-themes';
 
 export const metadata = {
   title: siteConfig.name,
@@ -20,10 +21,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
-      <body className="bg-[#fefef1]">
-        <TRPCReactProvider>
-          <ProviderContext>{children}</ProviderContext>
-        </TRPCReactProvider>
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TRPCReactProvider>
+            <ProviderContext>{children}</ProviderContext>
+          </TRPCReactProvider>
+        </ThemeProvider>
         <Toaster />
       </body>
     </html>

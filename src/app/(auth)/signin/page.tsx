@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export default async function SigninPage() {
   const user = await getServerAuthSession();
   if (user) {
-    redirect('/home');
+    redirect('/dashboard');
   }
 
   return (

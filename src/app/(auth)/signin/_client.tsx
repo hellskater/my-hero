@@ -7,13 +7,14 @@ import {
   CardDescription,
 } from '@/components/ui/card';
 import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
-import { useLogin, usePrivy } from '@privy-io/react-auth';
+import { useLogin, usePrivy, type User } from '@privy-io/react-auth';
 
 import { useEffect } from 'react';
 import { toast } from 'sonner';
 import { LogIn } from 'lucide-react';
 import { deleteSession, storeSession } from '@/lib/actions/auth';
 import { api } from '@/trpc/react';
+import { setCookie } from '@/lib/storage/cookies';
 
 const SignInButtons = () => {
   const { ready, authenticated, login } = usePrivy();
@@ -47,7 +48,7 @@ export default SignInButtons;
 
 const SignInButton = () => {
   const userApi = api.user.create.useMutation();
-  const getSession = async () => {
+  const getSession = async (user: User) => {
     const privyToken = localStorage.getItem('privy:token');
     const token = privyToken ? (JSON.parse(privyToken) as string) : null;
 
@@ -60,7 +61,10 @@ const SignInButton = () => {
     try {
       resp = await userApi.mutateAsync({
         token,
+        ...(user.google?.name && { name: user.google?.name }),
       });
+
+      setCookie('user-wallet', resp?.user?.walletAddress ?? '');
     } catch (error) {
       toast.error('Something went wrong');
       return;
@@ -73,9 +77,9 @@ const SignInButton = () => {
   };
 
   const { login } = useLogin({
-    onComplete: () => {
+    onComplete: (user) => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      getSession();
+      getSession(user);
     },
     onError: (error) => {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises

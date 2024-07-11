@@ -12,6 +12,8 @@ export const userRole = pgEnum('user_role', ['user', 'admin']);
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   walletAddress: varchar('wallet_address', { length: 256 }).notNull().unique(),
+  name: varchar('name', { length: 256 }).default(''),
+  username: varchar('username', { length: 256 }).unique().default(''),
   role: userRole('role').default('user'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
