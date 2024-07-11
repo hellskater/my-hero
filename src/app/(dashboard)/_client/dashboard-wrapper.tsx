@@ -15,7 +15,7 @@ const DashboardWrapper = ({ children }: { children: React.ReactNode }) => {
       <main
         className={cn(
           'min-h-screen transition-[margin-left] duration-300 ease-in-out',
-          isSidebarOpen === false ? 'ml-[90px]' : 'ml-72'
+          isSidebarOpen === false ? 'lg:ml-[90px]' : 'lg:ml-72'
         )}
       >
         <ContentWrapper>{children}</ContentWrapper>
